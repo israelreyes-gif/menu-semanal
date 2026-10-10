@@ -7,16 +7,18 @@ Comida y cena pueden marcarse como "Día libre".
 ## Estructura
 
 ```
-db/                     SQL de D1 (schema.sql, seed.sql)
-worker/                 API en Cloudflare Workers
+worker/                 API en Cloudflare Workers (la base de datos vive en D1)
   wrangler.jsonc        configuración y enlace con D1
   src/
     index.js            punto de entrada
     router.js           enrutado de peticiones
-    http.js             respuestas JSON, CORS y errores
-    validators.js       validación de datos
-    routes/             un archivo por recurso (foods, plan, version)
-    repos/              consultas a D1 (foodsRepo, planRepo)
+    constants.js        categorías y comidas
+    errors.js           errores HTTP
+    http.js             respuestas JSON y CORS
+    validators/         validación de fechas, alimentos y días
+    shapes/             formato de salida de los datos
+    repos/              consultas a D1
+    routes/             un archivo por recurso (version, foods, plan)
 docs/                   PWA (GitHub Pages sirve esta carpeta)
   index.html
   manifest.webmanifest
