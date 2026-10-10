@@ -1,0 +1,12 @@
+{
+  "name": "menu-semanal-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "menu-semanal",
+      "database_id": "3574a8ca-0427-4ebe-aa96-4adddde0d21f"
+    }
+  ]
+}
