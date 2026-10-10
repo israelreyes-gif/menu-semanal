@@ -1,0 +1,60 @@
+:root {
+  --bg: #FFF4F8;
+  --card: #FFFFFF;
+  --ink: #1C2551;
+  --muted: #5B6489;
+  --pink: #D6336C;
+  --pink-soft: #FCE0EB;
+  --pink-line: #F3C9DA;
+  --blue: #2F5FC4;
+  --blue-soft: #DDE9FC;
+  --zone-veg: #7FAEF0;
+  --zone-prot: #F59BBE;
+  --zone-carb: #B9E1F4;
+  --radius: 18px;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
