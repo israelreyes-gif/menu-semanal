@@ -1,0 +1,132 @@
+/* Pantalla Semana */
+.week {
+  padding: 12px 16px 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.week-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-label {
+  flex: 1;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.week-arrow {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.week-today {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--pink-soft);
+  color: var(--pink);
+  font: inherit;
+  font-weight: 600;
+}
+
+.day-list {
+  display: grid;
+  gap: 8px;
+}
+
+.day-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--pink-line);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+}
+
+.day-row.is-selected {
+  border-color: var(--pink);
+  background: var(--pink-soft);
+}
+
+.day-num {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.day-row.is-today .day-num {
+  background: var(--pink);
+  color: #fff;
+}
+
+.day-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.status-dot.is-complete {
+  background: var(--blue);
+}
+
+.status-dot.is-partial {
+  background: var(--pink);
+}
+
+.day-detail {
+  padding: 14px;
+  border: 1px solid var(--pink-line);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.day-detail h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: var(--blue);
+}
+
+.meal-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--pink-line);
+}
+
+.meal-label {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.meal-text {
+  text-align: right;
+  color: var(--ink);
+}
