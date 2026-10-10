@@ -8,7 +8,7 @@ async function boot() {
   screen.textContent = 'Conectando con la API…';
   try {
     const { dataUpdatedAt } = await fetchVersion();
-    screen.textContent = `${APP_NAME}: API conectada (datos del ${dataUpdatedAt})`;
+    screen.textContent = `${APP_NAME} v2: API conectada (datos del ${dataUpdatedAt})`;
   } catch (err) {
     screen.textContent = `No se pudo conectar con la API: ${err.message}`;
   }
