@@ -4,6 +4,7 @@ import { todayISO } from './domain/dates.js';
 const state = {
   tab: 'semana', // 'semana' | 'calendario' | 'alimentos'
   selectedDate: todayISO(),
+  editingDate: null, // fecha del día que se está editando, o null
 };
 
 const listeners = new Set();
