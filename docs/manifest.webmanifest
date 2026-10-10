@@ -1,0 +1,14 @@
+{
+  "name": "Mi Plato",
+  "short_name": "Mi Plato",
+  "description": "Diseña tu menú semanal",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF4F8",
+  "theme_color": "#D6336C",
+  "lang": "es",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
