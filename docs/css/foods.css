@@ -1,0 +1,91 @@
+/* Pantalla Alimentos */
+.foods {
+  padding: 14px 16px 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.food-section {
+  background: #fff;
+  border: 1px solid var(--pink-line);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.food-section h3 {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 12px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.chip-remove {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pink);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.food-form {
+  display: flex;
+  gap: 8px;
+}
+
+.food-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--pink-line);
+  border-radius: 12px;
+  font: inherit;
+  font-size: 16px; /* evita el zoom automático de iOS */
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.food-form button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--pink);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+}
+
+.status {
+  margin: 0;
+  min-height: 1.2em;
+  color: var(--pink);
+}
