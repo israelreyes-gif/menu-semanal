@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi Plato</title>
+  <meta name="theme-color" content="#D6336C">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Mi Plato">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true">
+        <circle cx="60" cy="60" r="57" fill="#FFFFFF" stroke="#F3C9DA" stroke-width="4"/>
+        <path d="M60 14A46 46 0 0 0 60 106Z" fill="#7FAEF0"/>
+        <path d="M60 60L60 14A46 46 0 0 1 106 60Z" fill="#F59BBE"/>
+        <path d="M60 60L106 60A46 46 0 0 1 60 106Z" fill="#B9E1F4"/>
+      </svg>
+      <span class="app-title">Mi Plato</span>
+    </header>
+    <main id="screen" class="app-main" aria-live="polite"></main>
+    <nav id="nav" class="app-nav" aria-label="Secciones"></nav>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
