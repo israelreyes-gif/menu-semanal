@@ -10,6 +10,11 @@ import { renderDayDetail } from '../ui/dayDetail.js';
 let memory = null; // { start, days }
 let requestId = 0;
 
+// Olvida la semana en memoria (se usa tras guardar o borrar un día).
+export function resetWeekMemory() {
+  memory = null;
+}
+
 function draw(container, start, days) {
   const { selectedDate } = getState();
 
@@ -29,9 +34,13 @@ function draw(container, start, days) {
     );
   });
 
+  const detail = renderDayDetail(selectedDate, days[selectedDate], (d) =>
+    setState({ editingDate: d })
+  );
+
   const wrap = document.createElement('div');
   wrap.className = 'week';
-  wrap.append(header, list, renderDayDetail(selectedDate, days[selectedDate]));
+  wrap.append(header, list, detail);
 
   container.replaceChildren(wrap);
 }
@@ -41,13 +50,13 @@ async function refresh(container, start) {
   try {
     const { data, source } = await loadWeek(start);
     // Se descarta si el usuario ya cambió de semana o de pestaña.
-    if (myId !== requestId || getState().tab !== 'semana') return;
+    if (myId !== requestId || getState().tab !== 'semana' || getState().editingDate) return;
 
     const changed = !memory || memory.start !== start || source === 'red';
     memory = { start, days: data.days };
     if (changed) draw(container, start, data.days);
   } catch (err) {
-    if (myId !== requestId || getState().tab !== 'semana') return;
+    if (myId !== requestId || getState().tab !== 'semana' || getState().editingDate) return;
     if (memory && memory.start === start) return; // ya se ve la copia en memoria
     container.innerHTML = `<section class="placeholder">
       <p>No se pudo cargar la semana.</p>
