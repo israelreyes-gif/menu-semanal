@@ -2,37 +2,39 @@ import { fetchFoods, addFood, removeFood } from '../api/foodsApi.js';
 import { loadWithCache, invalidate } from '../store/dataCache.js';
 import { FOOD_CATEGORIES } from '../domain/categories.js';
 import { renderFoodSection } from '../ui/foodSection.js';
+import { showAlert, showConfirm } from '../ui/modal.js';
 import { getState } from '../state.js';
 
 const CACHE_KEY = 'foods';
 
-function showMessage(container, text) {
-  const box = container.querySelector('.status');
-  if (box) box.textContent = text;
-}
-
-// Ejecuta una escritura, refresca la lista y muestra el error si lo hay.
+// Ejecuta una escritura, refresca la lista y avisa con un modal si algo falla.
 async function runAction(container, action) {
   try {
     await action();
     invalidate(CACHE_KEY);
     await load(container);
   } catch (err) {
-    showMessage(container, err.status === 409 ? 'Ese alimento ya existe.' : `Error: ${err.message}`);
+    if (err.status === 409) {
+      showAlert('Ese alimento ya existe en esta lista.', { title: 'Alimento repetido' });
+    } else {
+      showAlert(err.message, { title: 'No se pudo guardar' });
+    }
   }
 }
 
 function draw(container, foods) {
   const handlers = {
     onAdd: (category, name) => runAction(container, () => addFood(category, name)),
-    onRemove: (food) => {
-      if (window.confirm(`¿Quitar "${food.name}"?`)) {
-        runAction(container, () => removeFood(food.id));
-      }
+    onRemove: async (food) => {
+      const ok = await showConfirm(`¿Quitar "${food.name}" de la lista?`, {
+        title: 'Quitar alimento',
+        okLabel: 'Quitar',
+      });
+      if (ok) runAction(container, () => removeFood(food.id));
     },
   };
 
-  container.innerHTML = '<div class="foods"><p class="status muted"></p></div>';
+  container.innerHTML = '<div class="foods"></div>';
   const wrap = container.querySelector('.foods');
   FOOD_CATEGORIES.forEach((cat) => {
     wrap.append(renderFoodSection(cat, foods[cat.id] || [], handlers));
