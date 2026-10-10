@@ -1,0 +1,62 @@
+/* Pantalla Calendario */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-weekday {
+  padding: 4px 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.cal-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 52px;
+  padding: 4px 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.cal-cell.is-outside {
+  opacity: 0.4;
+}
+
+.cal-cell.is-selected {
+  border-color: var(--pink);
+  background: var(--pink-soft);
+}
+
+.cal-num {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+.cal-cell.is-today .cal-num {
+  background: var(--pink);
+  color: #fff;
+}
+
+.cal-cell .status-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.cal-hint {
+  margin: 0;
+  text-align: center;
+}
