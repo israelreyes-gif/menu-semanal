@@ -1,5 +1,6 @@
 import { APP_NAME } from './config.js';
 import { fetchVersion } from './api/versionApi.js';
+import { registerServiceWorker } from './pwa/registerSw.js';
 
 const screen = document.getElementById('screen');
 
@@ -13,4 +14,5 @@ async function boot() {
   }
 }
 
+registerServiceWorker();
 boot();
