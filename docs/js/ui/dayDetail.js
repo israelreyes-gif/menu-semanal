@@ -1,8 +1,10 @@
 import { longLabel } from '../domain/dates.js';
 import { MEAL_ORDER, MEAL_LABELS, mealText } from '../domain/summary.js';
+import { dayStatus, STATUS } from '../domain/rules.js';
 
 // Tarjeta con el resumen de las cuatro comidas del día seleccionado.
-export function renderDayDetail(date, day) {
+// onEdit se llama al pulsar el botón de diseñar o editar.
+export function renderDayDetail(date, day, onEdit) {
   const card = document.createElement('section');
   card.className = 'day-detail';
 
@@ -25,6 +27,13 @@ export function renderDayDetail(date, day) {
     row.append(label, text);
     card.append(row);
   });
+
+  const edit = document.createElement('button');
+  edit.type = 'button';
+  edit.className = 'edit-btn';
+  edit.textContent = dayStatus(day) === STATUS.NONE ? 'Diseñar este día' : 'Editar día';
+  edit.addEventListener('click', () => onEdit(date));
+  card.append(edit);
 
   return card;
 }
