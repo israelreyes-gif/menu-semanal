@@ -1,5 +1,6 @@
 // Utilidades de fechas. Las fechas viajan como texto "YYYY-MM-DD" (hora local).
-// La semana empieza en sábado y termina en viernes.
+// La semana de la app empieza en sábado y termina en viernes.
+// La cuadrícula del calendario va de lunes a domingo.
 
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const MESES = [
@@ -57,4 +58,45 @@ export function monthName(iso) {
 // Ejemplo: "Sábado 10 de octubre"
 export function longLabel(iso) {
   return `${dayName(iso)} ${dayNumber(iso)} de ${monthName(iso)}`;
+}
+
+// ---- Calendario mensual ----
+
+// Primer día del mes de la fecha dada.
+export function monthStart(iso) {
+  return `${iso.slice(0, 7)}-01`;
+}
+
+// Primer día del mes, desplazado n meses.
+export function addMonths(iso, n) {
+  const d = parseISO(monthStart(iso));
+  d.setMonth(d.getMonth() + n);
+  return toISO(d);
+}
+
+export function isSameMonth(a, b) {
+  return a.slice(0, 7) === b.slice(0, 7);
+}
+
+// Ejemplo: "Octubre 2026"
+export function monthTitle(iso) {
+  const name = monthName(iso);
+  return `${name[0].toUpperCase()}${name.slice(1)} ${parseISO(iso).getFullYear()}`;
+}
+
+// Todas las fechas de la cuadrícula del mes, de lunes a domingo
+// (incluye los días sueltos del mes anterior y del siguiente).
+export function monthGrid(iso) {
+  const first = monthStart(iso);
+  const last = addDays(addMonths(first, 1), -1);
+
+  const backToMonday = (parseISO(first).getDay() + 6) % 7;
+  const forwardToSunday = (7 - parseISO(last).getDay()) % 7;
+
+  const start = addDays(first, -backToMonday);
+  const end = addDays(last, forwardToSunday);
+
+  const dates = [];
+  for (let d = start; d <= end; d = addDays(d, 1)) dates.push(d);
+  return dates;
 }
