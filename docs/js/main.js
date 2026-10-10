@@ -1,64 +1,33 @@
 import { APP_NAME } from './config.js';
 import { registerServiceWorker } from './pwa/registerSw.js';
 import { fetchFoods, addFood, removeFood } from './api/foodsApi.js';
-import { fetchPlan, saveDay, deleteDay } from './api/planApi.js';
+import { loadWithCache } from './store/dataCache.js';
 
 const screen = document.getElementById('screen');
-const log = [];
 
-function show() {
-  screen.innerHTML = `<p>${APP_NAME}: prueba de API</p>` +
-    log.map((l) => `<p>${l}</p>`).join('');
+function show(lines) {
+  screen.innerHTML =
+    `<p>${APP_NAME}: prueba de caché</p>` +
+    lines.map((l) => `<p>${l}</p>`).join('') +
+    `<p><button id="btn-write">Añadir y borrar un alimento</button></p>`;
+  document.getElementById('btn-write').onclick = writeTest;
 }
 
-async function paso(nombre, fn) {
+async function load() {
   try {
-    const r = await fn();
-    log.push(`✅ ${nombre}${r ? ': ' + r : ''}`);
+    const { data, source } = await loadWithCache('foods', fetchFoods);
+    show([`Alimentos cargados desde: <b>${source}</b>`,
+          `Verduras: ${data.foods.veg.length}`]);
   } catch (err) {
-    log.push(`❌ ${nombre}: ${err.message}`);
+    show([`Error: ${err.message}`]);
   }
-  show();
 }
 
-async function boot() {
-  show();
-  let id;
-
-  await paso('Leer alimentos', async () => {
-    const { foods } = await fetchFoods();
-    return `${foods.veg.length} verduras, ${foods.fruit.length} frutas`;
-  });
-
-  await paso('Añadir alimento', async () => {
-    const { food } = await addFood('veg', 'prueba');
-    id = food.id;
-    return food.name;
-  });
-
-  await paso('Borrar alimento', async () => {
-    await removeFood(id);
-  });
-
-  await paso('Guardar día', async () => {
-    const day = {
-      mediamanana: { fruit: 'Manzana' },
-      comida: { free: true },
-      merienda: { fruit: 'Pera' },
-      cena: { free: true },
-    };
-    await saveDay('2026-10-10', day);
-  });
-
-  await paso('Leer menú', async () => {
-    const { days } = await fetchPlan('2026-10-10', '2026-10-16');
-    return `${Object.keys(days).length} día(s) guardado(s)`;
-  });
-
-  await paso('Borrar día', async () => {
-    await deleteDay('2026-10-10');
-  });
+async function writeTest() {
+  const { food } = await addFood('veg', 'prueba');
+  await removeFood(food.id);
+  await load();
 }
 
 registerServiceWorker();
-boot();
+load();
