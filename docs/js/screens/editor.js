@@ -6,6 +6,7 @@ import { saveDay, deleteDay } from '../api/planApi.js';
 import { loadWithCache } from '../store/dataCache.js';
 import { loadWeek, invalidateWeek } from '../store/planStore.js';
 import { resetWeekMemory } from './semana.js';
+import { resetMonthMemory } from './calendario.js';
 import { renderFruitMeal } from '../ui/fruitMeal.js';
 import { renderPlateMeal } from '../ui/plateMeal.js';
 import { showAlert, showConfirm } from '../ui/modal.js';
@@ -51,6 +52,7 @@ function startEditor(container, date, foods, day) {
   async function afterWrite() {
     invalidateWeek(weekStart(date));
     resetWeekMemory();
+    resetMonthMemory();
     closeEditor(date);
   }
 
