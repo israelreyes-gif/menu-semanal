@@ -3,7 +3,7 @@ import { MEAL_ORDER, MEAL_LABELS, mealText } from '../domain/summary.js';
 import { renderDayActions } from './dayActions.js';
 
 // Tarjeta con el resumen de las cuatro comidas del día seleccionado.
-// onEdit y onFill se llaman con la fecha al pulsar los botones.
+// Si se pasan onEdit y onFill, añade los botones de acción; si no, es solo lectura.
 export function renderDayDetail(date, day, onEdit, onFill) {
   const card = document.createElement('section');
   card.className = 'day-detail';
@@ -28,6 +28,6 @@ export function renderDayDetail(date, day, onEdit, onFill) {
     card.append(row);
   });
 
-  card.append(renderDayActions(date, day, onEdit, onFill));
+  if (onEdit) card.append(renderDayActions(date, day, onEdit, onFill));
   return card;
 }
