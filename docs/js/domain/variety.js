@@ -2,6 +2,7 @@ import { weekDates, weekStart } from './dates.js';
 
 const FRUIT_MEALS = ['mediamanana', 'merienda'];
 const PLATE_MEALS = ['comida', 'cena'];
+const SLOT_KEYS = ['fruit', 'veg', 'prot', 'carb'];
 
 // A partir de cuántas veces en la semana se avisa de que un alimento se repite.
 export const REPEAT_LIMIT = 3;
@@ -33,4 +34,12 @@ export function weekCount(food, date, draft, days) {
     (sum, d) => sum + countInDay(d === date ? draft : days[d], food),
     0
   );
+}
+
+// Alimentos recién elegidos en una comida (distintos de `previous`) que llegan al límite.
+// Devuelve [{ food, count }].
+export function newlyRepeated(previous, slot, date, draft, days) {
+  return SLOT_KEYS.filter((key) => slot[key] && slot[key] !== previous[key])
+    .map((key) => ({ food: slot[key], count: weekCount(slot[key], date, draft, days) }))
+    .filter((item) => item.count >= REPEAT_LIMIT);
 }
