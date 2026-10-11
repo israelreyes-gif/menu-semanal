@@ -1,6 +1,7 @@
 import { getState, setState } from '../state.js';
 import { weekStart, longLabel } from '../domain/dates.js';
 import { createDraft, toPayload } from '../domain/dayDraft.js';
+import { varietyNotes } from '../domain/variety.js';
 import { fetchFoods } from '../api/foodsApi.js';
 import { saveDay, deleteDay } from '../api/planApi.js';
 import { loadWithCache } from '../store/dataCache.js';
@@ -9,6 +10,7 @@ import { resetWeekMemory } from './semana.js';
 import { resetMonthMemory } from './calendario.js';
 import { renderFruitMeal } from '../ui/fruitMeal.js';
 import { renderPlateMeal } from '../ui/plateMeal.js';
+import { renderVarietyNote } from '../ui/varietyNote.js';
 import { showAlert, showConfirm } from '../ui/modal.js';
 import { icon } from '../ui/icons.js';
 
@@ -27,7 +29,9 @@ function button(iconName, text, className, onClick) {
   return b;
 }
 
-function startEditor(container, date, foods, day) {
+// `days` son todos los días guardados de la semana (el día editado es days[date]).
+function startEditor(container, date, foods, days) {
+  const day = days[date];
   let draft = createDraft(day);
   const original = JSON.stringify(draft);
   const existed = Boolean(day);
@@ -95,6 +99,10 @@ function startEditor(container, date, foods, day) {
     const title = document.createElement('h2');
     title.textContent = longLabel(date);
     bar.append(button('back', 'Volver', 'back-btn', goBack), title);
+    wrap.append(bar);
+
+    const note = renderVarietyNote(varietyNotes(date, draft, days));
+    if (note) wrap.append(note);
 
     const fruits = names(foods.fruit);
     const plateFoods = {
@@ -109,7 +117,6 @@ function startEditor(container, date, foods, day) {
     if (existed) actions.append(button('trash', 'Borrar día', 'btn-ghost', remove));
 
     wrap.append(
-      bar,
       renderFruitMeal({
         title: 'Media mañana',
         fruits,
@@ -157,7 +164,7 @@ export async function renderEditor(container, date) {
     ]);
     // Si mientras cargaba el usuario salió del editor, no se dibuja.
     if (getState().editingDate !== date) return;
-    startEditor(container, date, foodsRes.data.foods, weekRes.data.days[date]);
+    startEditor(container, date, foodsRes.data.foods, weekRes.data.days);
   } catch (err) {
     if (getState().editingDate !== date) return;
     container.innerHTML = `<section class="placeholder">
