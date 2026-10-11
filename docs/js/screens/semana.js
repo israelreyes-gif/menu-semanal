@@ -1,11 +1,12 @@
 import { getState, setState } from '../state.js';
 import { weekStart, weekDates, addDays, todayISO } from '../domain/dates.js';
 import { dayStatus } from '../domain/rules.js';
+import { weekText } from '../domain/weekText.js';
 import { loadWeek } from '../store/planStore.js';
 import { renderWeekHeader } from '../ui/weekHeader.js';
 import { renderDayRow } from '../ui/dayRow.js';
 import { renderDayDetail } from '../ui/dayDetail.js';
-import { renderShareWeekButton } from '../ui/shareWeekButton.js';
+import { renderShareButton } from '../ui/shareButton.js';
 
 // Última semana cargada, para repintar al instante al seleccionar un día.
 let memory = null; // { start, days }
@@ -45,7 +46,13 @@ function draw(container, start, days) {
 
   // Compartir solo tiene sentido si la semana tiene algo diseñado.
   if (weekDates(start).some((date) => days[date])) {
-    wrap.append(renderShareWeekButton(start, days));
+    wrap.append(
+      renderShareButton({
+        label: 'Compartir semana',
+        title: 'Menú semanal',
+        getText: () => weekText(start, days),
+      })
+    );
   }
 
   container.replaceChildren(wrap);
