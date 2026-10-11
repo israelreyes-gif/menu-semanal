@@ -1,10 +1,10 @@
 import { getState, setState } from '../state.js';
 import { weekStart, todayISO, longLabel } from '../domain/dates.js';
-import { dayStatus, STATUS } from '../domain/rules.js';
 import { currentMeal } from '../domain/currentMeal.js';
 import { loadWeek } from '../store/planStore.js';
 import { renderTodayMeals } from '../ui/todayMeals.js';
-import { icon } from '../ui/icons.js';
+import { renderDayActions } from '../ui/dayActions.js';
+import { autofillDays } from './autofill.js';
 
 let requestId = 0;
 
@@ -18,14 +18,14 @@ function draw(container, today, day) {
   title.textContent = longLabel(today);
   head.append(title);
 
-  const edit = document.createElement('button');
-  edit.type = 'button';
-  edit.className = 'edit-btn';
-  const label = dayStatus(day) === STATUS.NONE ? 'Diseñar hoy' : 'Editar hoy';
-  edit.innerHTML = `${icon('pencil')}<span>${label}</span>`;
-  edit.addEventListener('click', () => setState({ editingDate: today }));
+  const actions = renderDayActions(
+    today,
+    day,
+    (d) => setState({ editingDate: d }),
+    (d) => autofillDays([d], d)
+  );
 
-  wrap.append(head, renderTodayMeals(day, currentMeal()), edit);
+  wrap.append(head, renderTodayMeals(day, currentMeal()), actions);
   container.replaceChildren(wrap);
 }
 
