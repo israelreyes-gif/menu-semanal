@@ -5,6 +5,7 @@ import { loadWeek } from '../store/planStore.js';
 import { renderWeekHeader } from '../ui/weekHeader.js';
 import { renderDayRow } from '../ui/dayRow.js';
 import { renderDayDetail } from '../ui/dayDetail.js';
+import { renderShareWeekButton } from '../ui/shareWeekButton.js';
 
 // Última semana cargada, para repintar al instante al seleccionar un día.
 let memory = null; // { start, days }
@@ -41,6 +42,11 @@ function draw(container, start, days) {
   const wrap = document.createElement('div');
   wrap.className = 'week';
   wrap.append(header, list, detail);
+
+  // Compartir solo tiene sentido si la semana tiene algo diseñado.
+  if (weekDates(start).some((date) => days[date])) {
+    wrap.append(renderShareWeekButton(start, days));
+  }
 
   container.replaceChildren(wrap);
 }
