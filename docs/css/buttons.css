@@ -17,6 +17,10 @@
   gap: 8px;
 }
 
+button:disabled {
+  opacity: 0.6;
+}
+
 /* Botón azul claro: compartir y acciones de ayuda */
 .share-btn,
 .soft-btn {
@@ -30,6 +34,25 @@
 .soft-btn {
   background: var(--blue-soft);
   color: var(--blue);
+}
+
+/* Fila con Diseñar/Editar y Rellenar, a partes iguales */
+.detail-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 10px;
+}
+
+.day-detail .detail-actions {
+  margin-top: 14px;
+}
+
+.detail-actions .edit-btn,
+.detail-actions .soft-btn {
+  margin-top: 0;
+  padding: 13px 10px;
+  font-size: 0.95rem;
 }
 
 .shop-list {
