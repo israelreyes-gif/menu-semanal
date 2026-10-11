@@ -1,6 +1,7 @@
 import { icon } from './icons.js';
 
 export const TABS = [
+  { id: 'hoy', label: 'Hoy', icon: 'sun' },
   { id: 'semana', label: 'Semana', icon: 'week' },
   { id: 'calendario', label: 'Calendario', icon: 'calendar' },
   { id: 'compra', label: 'Compra', icon: 'cart' },
