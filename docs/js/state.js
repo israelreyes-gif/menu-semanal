@@ -2,7 +2,7 @@ import { todayISO, monthStart } from './domain/dates.js';
 
 // Estado único de la app. Se cambia solo con setState y las pantallas se enteran por subscribe.
 const state = {
-  tab: 'semana', // 'semana' | 'calendario' | 'alimentos'
+  tab: 'hoy', // 'hoy' | 'semana' | 'calendario' | 'compra' | 'alimentos'
   selectedDate: todayISO(),
   calendarMonth: monthStart(todayISO()), // primer día del mes que se ve en el calendario
   editingDate: null, // fecha del día que se está editando, o null
