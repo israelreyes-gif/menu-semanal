@@ -6,11 +6,12 @@ Comida y cena pueden marcarse como "Día libre".
 
 ## Pantallas
 
-- **Semana:** los 7 días (sábado a viernes) con su punto de estado y el resumen del día seleccionado.
+- **Hoy:** las cuatro comidas de hoy, con la que toca ahora marcada. Es la pantalla de inicio.
+- **Semana:** los 7 días (sábado a viernes) en una línea, con su punto de estado y el resumen del día seleccionado.
 - **Calendario:** vista mensual (lunes a domingo) con los puntos de estado.
 - **Compra:** lista de la compra de la semana, con cantidades, para compartir o copiar.
 - **Alimentos:** gestión de verduras, proteínas, hidratos y frutas.
-- **Editor del día:** se abre desde Semana o Calendario para diseñar o editar un día.
+- **Editor del día:** se abre desde Hoy, Semana o Calendario para diseñar o editar un día.
 
 Punto azul: día completo. Punto rosa: día a medias. Sin punto: sin diseñar.
 
@@ -43,7 +44,8 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
   sw.js                 service worker (carga los archivos de sw/)
   sw/                   configuración, fecha de caché, frescura y estrategias
   icons/                icono SVG y PNG (pantalla de inicio de iOS)
-  css/                  base, layout, nav, foods, modal, week, editor, calendar, buttons
+  css/                  base, layout, nav, foods, modal, week, editor, calendar,
+                        buttons, today
   js/
     main.js             arranque
     app.js              pinta la pestaña activa o el editor
@@ -51,12 +53,12 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
     state.js            estado de la app (pestaña, día, mes, día en edición)
     api/                cliente HTTP y llamadas a la API
     domain/             fechas, reglas de estado, resúmenes, borrador del día,
-                        categorías y lista de la compra
+                        categorías, comida actual y lista de la compra
     store/              caché local de datos y almacenamiento seguro
     pwa/                registro del service worker, bloqueo de zoom y compartir
     ui/                 piezas reutilizables (barra, iconos, chips, modal, filas,
-                        cuadrícula, lista de la compra…)
-    screens/            semana, calendario, compra, alimentos, editor del día
+                        cuadrícula, tarjetas de hoy, lista de la compra…)
+    screens/            hoy, semana, calendario, compra, alimentos, editor del día
 ```
 
 ## Caché
