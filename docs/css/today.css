@@ -1,0 +1,80 @@
+/* Pantalla Hoy */
+.today-head {
+  display: grid;
+  gap: 2px;
+}
+
+.today-head h2 {
+  font-size: 1.35rem;
+  color: var(--blue);
+}
+
+.today-list {
+  display: grid;
+  gap: 12px;
+}
+
+.today-card {
+  padding: 14px;
+  border: 1px solid var(--pink-line);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.today-card.is-now {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px var(--pink-soft);
+}
+
+.today-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.today-card-head h3 {
+  font-size: 1.05rem;
+}
+
+.now-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--pink);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.today-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.today-label {
+  width: 72px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.today-value {
+  flex: 1;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.today-value.is-empty {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.today-free {
+  margin: 4px 0 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--pink);
+}
