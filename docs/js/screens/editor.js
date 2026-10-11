@@ -10,6 +10,7 @@ import { resetMonthMemory } from './calendario.js';
 import { renderFruitMeal } from '../ui/fruitMeal.js';
 import { renderPlateMeal } from '../ui/plateMeal.js';
 import { showAlert, showConfirm } from '../ui/modal.js';
+import { icon } from '../ui/icons.js';
 
 const names = (list) => (list || []).map((f) => f.name);
 
@@ -17,11 +18,11 @@ function closeEditor(date) {
   setState({ editingDate: null, selectedDate: date });
 }
 
-function button(text, className, onClick) {
+function button(iconName, text, className, onClick) {
   const b = document.createElement('button');
   b.type = 'button';
   b.className = className;
-  b.textContent = text;
+  b.innerHTML = `${icon(iconName)}<span>${text}</span>`;
   b.addEventListener('click', onClick);
   return b;
 }
@@ -93,7 +94,7 @@ function startEditor(container, date, foods, day) {
     bar.className = 'editor-bar';
     const title = document.createElement('h2');
     title.textContent = longLabel(date);
-    bar.append(button('‹ Volver', 'back-btn', goBack), title);
+    bar.append(button('back', 'Volver', 'back-btn', goBack), title);
 
     const fruits = names(foods.fruit);
     const plateFoods = {
@@ -104,8 +105,8 @@ function startEditor(container, date, foods, day) {
 
     const actions = document.createElement('div');
     actions.className = 'editor-actions';
-    actions.append(button('Guardar día', 'btn-primary', save));
-    if (existed) actions.append(button('Borrar día', 'btn-ghost', remove));
+    actions.append(button('check', 'Guardar día', 'btn-primary', save));
+    if (existed) actions.append(button('trash', 'Borrar día', 'btn-ghost', remove));
 
     wrap.append(
       bar,
