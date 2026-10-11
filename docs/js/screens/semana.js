@@ -1,12 +1,16 @@
 import { getState, setState } from '../state.js';
 import { weekStart, weekDates, addDays, todayISO } from '../domain/dates.js';
-import { dayStatus } from '../domain/rules.js';
+import { dayStatus, STATUS } from '../domain/rules.js';
 import { weekText } from '../domain/weekText.js';
 import { loadWeek } from '../store/planStore.js';
+import { onDataChange } from '../store/dataEvents.js';
 import { renderWeekHeader } from '../ui/weekHeader.js';
 import { renderDayRow } from '../ui/dayRow.js';
 import { renderDayDetail } from '../ui/dayDetail.js';
 import { renderShareButton } from '../ui/shareButton.js';
+import { iconButton } from '../ui/iconButton.js';
+import { showConfirm } from '../ui/modal.js';
+import { autofillDays } from './autofill.js';
 
 // Última semana cargada, para repintar al instante al seleccionar un día.
 let memory = null; // { start, days }
@@ -16,9 +20,26 @@ let requestId = 0;
 export function resetWeekMemory() {
   memory = null;
 }
+onDataChange(resetWeekMemory);
+
+function autofillWeekButton(start) {
+  const button = iconButton('sparkles', 'Autocompletar semana', 'soft-btn', async () => {
+    const ok = await showConfirm(
+      'Se rellenarán los huecos de los 7 días con alimentos de tu lista. Lo que ya has elegido no se toca.',
+      { title: 'Autocompletar semana', okLabel: 'Autocompletar' }
+    );
+    if (!ok) return;
+
+    button.disabled = true;
+    button.querySelector('span').textContent = 'Rellenando…';
+    await autofillDays(weekDates(start), start, { notify: true });
+  });
+  return button;
+}
 
 function draw(container, start, days) {
   const { selectedDate } = getState();
+  const dates = weekDates(start);
 
   const header = renderWeekHeader(start, {
     onPrev: () => setState({ selectedDate: addDays(start, -7) }),
@@ -28,7 +49,7 @@ function draw(container, start, days) {
 
   const list = document.createElement('div');
   list.className = 'day-list';
-  weekDates(start).forEach((date) => {
+  dates.forEach((date) => {
     list.append(
       renderDayRow(date, dayStatus(days[date]), date === selectedDate, (d) =>
         setState({ selectedDate: d })
@@ -36,16 +57,24 @@ function draw(container, start, days) {
     );
   });
 
-  const detail = renderDayDetail(selectedDate, days[selectedDate], (d) =>
-    setState({ editingDate: d })
+  const detail = renderDayDetail(
+    selectedDate,
+    days[selectedDate],
+    (d) => setState({ editingDate: d }),
+    (d) => autofillDays([d], d)
   );
 
   const wrap = document.createElement('div');
   wrap.className = 'week';
   wrap.append(header, list, detail);
 
+  // Autocompletar solo aparece si a la semana le falta algo.
+  if (dates.some((date) => dayStatus(days[date]) !== STATUS.COMPLETE)) {
+    wrap.append(autofillWeekButton(start));
+  }
+
   // Compartir solo tiene sentido si la semana tiene algo diseñado.
-  if (weekDates(start).some((date) => days[date])) {
+  if (dates.some((date) => days[date])) {
     wrap.append(
       renderShareButton({
         label: 'Compartir semana',
