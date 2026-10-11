@@ -1,0 +1,67 @@
+/* Iconos y botones centrados, y estilos de la lista de la compra */
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.edit-btn,
+.btn-primary,
+.btn-ghost,
+.back-btn,
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.share-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.share-btn {
+  padding: 13px 10px;
+  border: 0;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+.share-btn.is-primary {
+  background: var(--pink);
+  color: #fff;
+}
+
+.share-btn.is-secondary {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.shop-list {
+  display: grid;
+  gap: 14px;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--pink-line);
+}
+
+.shop-item:first-of-type {
+  border-top: 0;
+}
+
+.shop-count {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
