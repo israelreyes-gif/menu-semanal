@@ -7,9 +7,10 @@ Comida y cena pueden marcarse como "Día libre".
 ## Pantallas
 
 - **Hoy:** las cuatro comidas de hoy, con la que toca ahora marcada. Es la pantalla de inicio.
-- **Semana:** los 7 días (sábado a viernes) en una línea, con su punto de estado y el resumen del día seleccionado.
+- **Semana:** los 7 días (sábado a viernes) en una línea, con su punto de estado y el resumen
+  del día seleccionado. Permite compartir el menú de la semana como texto.
 - **Calendario:** vista mensual (lunes a domingo) con los puntos de estado.
-- **Compra:** lista de la compra de la semana, con cantidades, para compartir o copiar.
+- **Compra:** lista de la compra de la semana, con cantidades, que se puede compartir.
 - **Alimentos:** gestión de verduras, proteínas, hidratos y frutas.
 - **Editor del día:** se abre desde Hoy, Semana o Calendario para diseñar o editar un día.
 
@@ -53,11 +54,13 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
     state.js            estado de la app (pestaña, día, mes, día en edición)
     api/                cliente HTTP y llamadas a la API
     domain/             fechas, reglas de estado, resúmenes, borrador del día,
-                        categorías, comida actual y lista de la compra
+                        categorías, comida actual, lista de la compra y textos
+                        para compartir
     store/              caché local de datos y almacenamiento seguro
     pwa/                registro del service worker, bloqueo de zoom y compartir
     ui/                 piezas reutilizables (barra, iconos, chips, modal, filas,
-                        cuadrícula, tarjetas de hoy, lista de la compra…)
+                        cuadrícula, tarjetas de hoy, lista de la compra, botón
+                        de compartir…)
     screens/            hoy, semana, calendario, compra, alimentos, editor del día
 ```
 
@@ -77,3 +80,4 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
 - La API se despliega desde GitHub (Workers Builds), sin CLI.
 - Los avisos y confirmaciones usan siempre `ui/modal.js`, nunca `alert` ni `confirm`.
 - Los iconos salen de `ui/icons.js`.
+- Compartir usa siempre `ui/shareButton.js`, para que el botón sea igual en todas las pantallas.
