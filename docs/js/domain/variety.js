@@ -1,48 +1,36 @@
-import { addDays, dayName, weekDates, weekStart } from './dates.js';
+import { weekDates, weekStart } from './dates.js';
 
 const FRUIT_MEALS = ['mediamanana', 'merienda'];
 const PLATE_MEALS = ['comida', 'cena'];
 
-// Alimentos que aparecen en un día (los días libres no cuentan).
-export function foodsOfDay(day) {
-  const foods = new Set();
-  if (!day) return foods;
+// A partir de cuántas veces en la semana se avisa de que un alimento se repite.
+export const REPEAT_LIMIT = 3;
+
+// Cuántas veces aparece un alimento en un día (los días libres no cuentan).
+export function countInDay(day, food) {
+  if (!day) return 0;
+  let count = 0;
 
   FRUIT_MEALS.forEach((meal) => {
-    const fruit = day[meal] && day[meal].fruit;
-    if (fruit) foods.add(fruit);
+    if (day[meal] && day[meal].fruit === food) count += 1;
   });
 
   PLATE_MEALS.forEach((meal) => {
     const slot = day[meal];
     if (!slot || slot.free) return;
-    [slot.veg, slot.prot, slot.carb].forEach((food) => {
-      if (food) foods.add(food);
+    [slot.veg, slot.prot, slot.carb].forEach((item) => {
+      if (item === food) count += 1;
     });
   });
 
-  return foods;
+  return count;
 }
 
-// Avisos de variedad para el día `date` que se está editando.
-// `draft` es el borrador del día y `days` los días ya guardados de la semana.
-export function varietyNotes(date, draft, days) {
-  const others = weekDates(weekStart(date)).filter((d) => d !== date);
-  const yesterday = addDays(date, -1);
-  const tomorrow = addDays(date, 1);
-  const notes = [];
-
-  foodsOfDay(draft).forEach((food) => {
-    const sameFood = others.filter((d) => foodsOfDay(days[d]).has(food));
-
-    if (sameFood.length >= 2) {
-      notes.push(`${food}: ya está en ${sameFood.length} días más esta semana.`);
-    } else if (sameFood.includes(yesterday)) {
-      notes.push(`${food}: también estaba ayer (${dayName(yesterday)}).`);
-    } else if (sameFood.includes(tomorrow)) {
-      notes.push(`${food}: también está mañana (${dayName(tomorrow)}).`);
-    }
-  });
-
-  return notes;
+// Cuántas veces aparece un alimento en la semana de `date`,
+// usando el borrador para el día que se está editando y lo guardado para el resto.
+export function weekCount(food, date, draft, days) {
+  return weekDates(weekStart(date)).reduce(
+    (sum, d) => sum + countInDay(d === date ? draft : days[d], food),
+    0
+  );
 }
