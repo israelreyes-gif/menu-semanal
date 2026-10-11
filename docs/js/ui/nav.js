@@ -1,7 +1,10 @@
+import { icon } from './icons.js';
+
 export const TABS = [
-  { id: 'semana', label: 'Semana' },
-  { id: 'calendario', label: 'Calendario' },
-  { id: 'alimentos', label: 'Alimentos' },
+  { id: 'semana', label: 'Semana', icon: 'week' },
+  { id: 'calendario', label: 'Calendario', icon: 'calendar' },
+  { id: 'compra', label: 'Compra', icon: 'cart' },
+  { id: 'alimentos', label: 'Alimentos', icon: 'bowl' },
 ];
 
 // Dibuja la barra inferior. onSelect recibe el id de la pestaña pulsada.
@@ -11,7 +14,8 @@ export function renderNav(container, activeId, onSelect) {
       ${TABS.map(
         (t) => `
         <button class="tab ${t.id === activeId ? 'is-active' : ''}" data-tab="${t.id}">
-          ${t.label}
+          ${icon(t.icon)}
+          <span>${t.label}</span>
         </button>`
       ).join('')}
     </div>`;
