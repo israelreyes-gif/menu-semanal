@@ -5,38 +5,9 @@ import { buildShoppingList, isListEmpty } from '../domain/shopping.js';
 import { shoppingText } from '../domain/shoppingText.js';
 import { renderWeekHeader } from '../ui/weekHeader.js';
 import { renderShoppingList } from '../ui/shoppingList.js';
-import { icon } from '../ui/icons.js';
-import { shareText, copyText } from '../pwa/share.js';
-import { showAlert } from '../ui/modal.js';
+import { renderShareButton } from '../ui/shareButton.js';
 
 let requestId = 0;
-
-function actionButton(iconName, label, className, onClick) {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = `share-btn ${className}`;
-  b.innerHTML = `${icon(iconName)}<span>${label}</span>`;
-  b.addEventListener('click', onClick);
-  return b;
-}
-
-async function onShare(text) {
-  const result = await shareText('Lista de la compra', text);
-  if (result === 'copied') {
-    showAlert('Este dispositivo no permite compartir, así que la lista se ha copiado.', {
-      title: 'Lista copiada',
-    });
-  } else if (result === 'failed') {
-    showAlert('No se pudo compartir ni copiar la lista.', { title: 'No se pudo compartir' });
-  }
-}
-
-async function onCopy(text) {
-  const ok = await copyText(text);
-  showAlert(ok ? 'La lista está en el portapapeles.' : 'No se pudo copiar la lista.', {
-    title: ok ? 'Lista copiada' : 'No se pudo copiar',
-  });
-}
 
 function draw(container, start, days) {
   const header = renderWeekHeader(start, {
@@ -57,14 +28,14 @@ function draw(container, start, days) {
     empty.textContent = 'Esta semana aún no tiene alimentos. Diseña algún día en la pestaña Semana.';
     wrap.append(empty);
   } else {
-    const text = shoppingText(start, list);
-    const row = document.createElement('div');
-    row.className = 'share-row';
-    row.append(
-      actionButton('share', 'Compartir', 'is-primary', () => onShare(text)),
-      actionButton('copy', 'Copiar', 'is-secondary', () => onCopy(text))
+    wrap.append(
+      renderShoppingList(list),
+      renderShareButton({
+        label: 'Compartir lista',
+        title: 'Lista de la compra',
+        getText: () => shoppingText(start, list),
+      })
     );
-    wrap.append(renderShoppingList(list), row);
   }
 
   container.replaceChildren(wrap);
