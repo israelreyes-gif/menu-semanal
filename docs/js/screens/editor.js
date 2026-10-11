@@ -1,7 +1,8 @@
 import { getState, setState } from '../state.js';
 import { weekStart, longLabel } from '../domain/dates.js';
 import { createDraft, toPayload } from '../domain/dayDraft.js';
-import { weekCount, REPEAT_LIMIT } from '../domain/variety.js';
+import { newlyRepeated } from '../domain/variety.js';
+import { fillDraft } from '../domain/suggest.js';
 import { fetchFoods } from '../api/foodsApi.js';
 import { saveDay, deleteDay } from '../api/planApi.js';
 import { loadWithCache } from '../store/dataCache.js';
@@ -10,23 +11,13 @@ import { resetWeekMemory } from './semana.js';
 import { resetMonthMemory } from './calendario.js';
 import { renderFruitMeal } from '../ui/fruitMeal.js';
 import { renderPlateMeal } from '../ui/plateMeal.js';
+import { iconButton } from '../ui/iconButton.js';
 import { showAlert, showConfirm } from '../ui/modal.js';
-import { icon } from '../ui/icons.js';
 
 const names = (list) => (list || []).map((f) => f.name);
-const SLOT_KEYS = ['fruit', 'veg', 'prot', 'carb'];
 
 function closeEditor(date) {
   setState({ editingDate: null, selectedDate: date });
-}
-
-function button(iconName, text, className, onClick) {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = className;
-  b.innerHTML = `${icon(iconName)}<span>${text}</span>`;
-  b.addEventListener('click', onClick);
-  return b;
 }
 
 // `days` son todos los días guardados de la semana (el día editado es days[date]).
@@ -37,29 +28,40 @@ function startEditor(container, date, foods, days) {
   const existed = Boolean(day);
   let busy = false;
 
-  // Avisa si un alimento recién elegido llega al límite de repeticiones de la semana.
-  function warnIfRepeated(previous, slot) {
-    SLOT_KEYS.forEach((key) => {
-      const food = slot[key];
-      if (!food || food === previous[key]) return;
-
-      const count = weekCount(food, date, draft, days);
-      if (count >= REPEAT_LIMIT) {
-        showAlert(
-          `"${food}" ya aparece ${count} veces esta semana, contando este día. ` +
-            'Puedes dejarlo, pero quizá convenga variar.',
-          { title: 'Alimento repetido' }
-        );
-      }
-    });
-  }
+  const available = {
+    veg: names(foods.veg),
+    prot: names(foods.prot),
+    carb: names(foods.carb),
+    fruit: names(foods.fruit),
+  };
 
   const setSlot = (meal, slot) => {
     const previous = draft[meal];
     draft = { ...draft, [meal]: slot };
     paint();
-    warnIfRepeated(previous, slot);
+
+    // Avisa si un alimento recién elegido llega al límite de repeticiones de la semana.
+    newlyRepeated(previous, slot, date, draft, days).forEach(({ food, count }) => {
+      showAlert(
+        `"${food}" ya aparece ${count} veces esta semana, contando este día. ` +
+          'Puedes dejarlo, pero quizá convenga variar.',
+        { title: 'Alimento repetido' }
+      );
+    });
   };
+
+  function fillGaps() {
+    const result = fillDraft(draft, available, date, days);
+    if (result.filled === 0) {
+      showAlert(
+        'No hay huecos que rellenar, o faltan alimentos en la lista para los que están vacíos.',
+        { title: 'Nada que rellenar' }
+      );
+      return;
+    }
+    draft = result.draft;
+    paint();
+  }
 
   async function goBack() {
     if (JSON.stringify(draft) !== original) {
@@ -117,43 +119,37 @@ function startEditor(container, date, foods, days) {
     bar.className = 'editor-bar';
     const title = document.createElement('h2');
     title.textContent = longLabel(date);
-    bar.append(button('back', 'Volver', 'back-btn', goBack), title);
-
-    const fruits = names(foods.fruit);
-    const plateFoods = {
-      veg: names(foods.veg),
-      prot: names(foods.prot),
-      carb: names(foods.carb),
-    };
+    bar.append(iconButton('back', 'Volver', 'back-btn', goBack), title);
 
     const actions = document.createElement('div');
     actions.className = 'editor-actions';
-    actions.append(button('check', 'Guardar día', 'btn-primary', save));
-    if (existed) actions.append(button('trash', 'Borrar día', 'btn-ghost', remove));
+    actions.append(iconButton('check', 'Guardar día', 'btn-primary', save));
+    if (existed) actions.append(iconButton('trash', 'Borrar día', 'btn-ghost', remove));
 
     wrap.append(
       bar,
+      iconButton('sparkles', 'Rellenar huecos', 'soft-btn', fillGaps),
       renderFruitMeal({
         title: 'Media mañana',
-        fruits,
+        fruits: available.fruit,
         slot: draft.mediamanana,
         onChange: (s) => setSlot('mediamanana', s),
       }),
       renderPlateMeal({
         title: 'Comida',
-        foods: plateFoods,
+        foods: available,
         slot: draft.comida,
         onChange: (s) => setSlot('comida', s),
       }),
       renderFruitMeal({
         title: 'Merienda',
-        fruits,
+        fruits: available.fruit,
         slot: draft.merienda,
         onChange: (s) => setSlot('merienda', s),
       }),
       renderPlateMeal({
         title: 'Cena',
-        foods: plateFoods,
+        foods: available,
         slot: draft.cena,
         onChange: (s) => setSlot('cena', s),
       }),
