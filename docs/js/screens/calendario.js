@@ -7,7 +7,6 @@ import { onDataChange } from '../store/dataEvents.js';
 import { renderMonthHeader } from '../ui/monthHeader.js';
 import { renderMonthGrid } from '../ui/monthGrid.js';
 import { renderDayDetail } from '../ui/dayDetail.js';
-import { autofillDays } from './autofill.js';
 
 // Último mes cargado, para repintar al instante al seleccionar un día.
 let memory = null; // { from, to, days }
@@ -40,16 +39,10 @@ function draw(container, dates, days) {
   wrap.className = 'week';
   wrap.append(header, grid);
 
+  // Solo lectura: el detalle se muestra sin botones de edición.
   // El detalle solo se muestra si el día seleccionado está dentro de lo cargado.
   if (dates.includes(selectedDate)) {
-    wrap.append(
-      renderDayDetail(
-        selectedDate,
-        days[selectedDate],
-        (d) => setState({ editingDate: d }),
-        (d) => autofillDays([d], d)
-      )
-    );
+    wrap.append(renderDayDetail(selectedDate, days[selectedDate]));
   } else {
     const hint = document.createElement('p');
     hint.className = 'muted cal-hint';
