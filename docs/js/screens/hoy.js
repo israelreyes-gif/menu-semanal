@@ -14,12 +14,9 @@ function draw(container, today, day) {
 
   const head = document.createElement('div');
   head.className = 'today-head';
-  const small = document.createElement('span');
-  small.className = 'muted';
-  small.textContent = 'Hoy';
   const title = document.createElement('h2');
   title.textContent = longLabel(today);
-  head.append(small, title);
+  head.append(title);
 
   const edit = document.createElement('button');
   edit.type = 'button';
