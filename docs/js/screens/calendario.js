@@ -3,9 +3,11 @@ import { addMonths, monthGrid, monthStart, todayISO } from '../domain/dates.js';
 import { dayStatus } from '../domain/rules.js';
 import { fetchPlan } from '../api/planApi.js';
 import { loadWithCache } from '../store/dataCache.js';
+import { onDataChange } from '../store/dataEvents.js';
 import { renderMonthHeader } from '../ui/monthHeader.js';
 import { renderMonthGrid } from '../ui/monthGrid.js';
 import { renderDayDetail } from '../ui/dayDetail.js';
+import { autofillDays } from './autofill.js';
 
 // Último mes cargado, para repintar al instante al seleccionar un día.
 let memory = null; // { from, to, days }
@@ -15,6 +17,7 @@ let requestId = 0;
 export function resetMonthMemory() {
   memory = null;
 }
+onDataChange(resetMonthMemory);
 
 function draw(container, dates, days) {
   const { selectedDate, calendarMonth } = getState();
@@ -40,7 +43,12 @@ function draw(container, dates, days) {
   // El detalle solo se muestra si el día seleccionado está dentro de lo cargado.
   if (dates.includes(selectedDate)) {
     wrap.append(
-      renderDayDetail(selectedDate, days[selectedDate], (d) => setState({ editingDate: d }))
+      renderDayDetail(
+        selectedDate,
+        days[selectedDate],
+        (d) => setState({ editingDate: d }),
+        (d) => autofillDays([d], d)
+      )
     );
   } else {
     const hint = document.createElement('p');
