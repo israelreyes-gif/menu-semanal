@@ -7,14 +7,26 @@ Comida y cena pueden marcarse como "Día libre".
 ## Pantallas
 
 - **Hoy:** las cuatro comidas de hoy, con la que toca ahora marcada. Es la pantalla de inicio.
+  Permite diseñar o editar el día y rellenarlo automáticamente.
 - **Semana:** los 7 días (sábado a viernes) en una línea, con su punto de estado y el resumen
-  del día seleccionado. Permite compartir el menú de la semana como texto.
-- **Calendario:** vista mensual (lunes a domingo) con los puntos de estado.
+  del día seleccionado. Permite diseñar, editar o rellenar un día, autocompletar la semana
+  entera y compartir el menú como texto.
+- **Calendario:** vista mensual (lunes a domingo) con los puntos de estado. Es de solo lectura:
+  al tocar un día se ve su menú, pero no se edita aquí.
 - **Compra:** lista de la compra de la semana, con cantidades, que se puede compartir.
 - **Alimentos:** gestión de verduras, proteínas, hidratos y frutas.
-- **Editor del día:** se abre desde Hoy, Semana o Calendario para diseñar o editar un día.
+- **Editor del día:** se abre desde Hoy o Semana para diseñar o editar un día. Incluye
+  "Rellenar huecos", que completa solo lo que falta.
 
 Punto azul: día completo. Punto rosa: día a medias. Sin punto: sin diseñar.
+
+## Variedad y sugerencias
+
+- **Aviso de repetición:** si un alimento llega a 3 apariciones en la misma semana, sale un
+  aviso en un modal. Los días libres no cuentan.
+- **Rellenar y autocompletar:** las sugerencias eligen los alimentos menos usados de la semana.
+  "Rellenar" completa un día y lo guarda directamente; "Autocompletar semana" lo hace con todos
+  los días incompletos, previa confirmación.
 
 ## Arquitectura
 
@@ -54,14 +66,18 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
     state.js            estado de la app (pestaña, día, mes, día en edición)
     api/                cliente HTTP y llamadas a la API
     domain/             fechas, reglas de estado, resúmenes, borrador del día,
-                        categorías, comida actual, lista de la compra y textos
-                        para compartir
-    store/              caché local de datos y almacenamiento seguro
+                        categorías, comida actual, lista de la compra, textos
+                        para compartir, variedad (variety), sugerencias (suggest)
+                        y autocompletado (autofill)
+    store/              caché local de datos, almacenamiento seguro, alimentos
+                        (foodsStore) y eventos de cambio de datos (dataEvents)
     pwa/                registro del service worker, bloqueo de zoom y compartir
     ui/                 piezas reutilizables (barra, iconos, chips, modal, filas,
                         cuadrícula, tarjetas de hoy, lista de la compra, botón
-                        de compartir…)
+                        de compartir, botones con icono, acciones del día y
+                        detalle del día…)
     screens/            hoy, semana, calendario, compra, alimentos, editor del día
+                        y autofill (rellenar días)
 ```
 
 ## Caché
@@ -71,6 +87,8 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
 - **Datos (localStorage):** en cada carga se pregunta a `/api/version` por la fecha de la última
   modificación. Si la copia local es igual o posterior, se usa; si es anterior, se vuelve a pedir.
   Sin conexión se usa la copia local.
+- Al guardar, borrar o autocompletar, las pantallas olvidan su copia en memoria mediante
+  `store/dataEvents.js`, para no mostrar datos viejos.
 
 ## Reglas del proyecto
 
@@ -81,3 +99,4 @@ docs/                   PWA (GitHub Pages sirve esta carpeta)
 - Los avisos y confirmaciones usan siempre `ui/modal.js`, nunca `alert` ni `confirm`.
 - Los iconos salen de `ui/icons.js`.
 - Compartir usa siempre `ui/shareButton.js`, para que el botón sea igual en todas las pantallas.
+- La edición de días solo se hace desde Hoy y Semana; Calendario es de solo lectura.
