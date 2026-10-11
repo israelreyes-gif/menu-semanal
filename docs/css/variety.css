@@ -1,0 +1,19 @@
+/* Avisos de variedad en el editor */
+.variety-note {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--blue-soft);
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.variety-note strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--blue);
+}
+
+.variety-note ul {
+  margin: 0;
+  padding-left: 18px;
+}
